@@ -27,9 +27,5 @@ class AbstractPolicyNetwork(nn.Module, abc.ABC):
         pass
 
     @abc.abstractmethod
-    def get_actionprob(self, input):
-        pass
-
-    @abc.abstractmethod
     def get_entropy(self, input):
         pass

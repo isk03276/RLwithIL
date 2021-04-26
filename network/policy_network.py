@@ -1,8 +1,10 @@
 from network.abstract_policy_network import AbstractPolicyNetwork
 from common.torch_utils import TorchUtils
 
-import torch
 import torch.nn as nn
+import torch.nn.functional as F
+from torch.distributions import Categorical
+
 import numpy as np
 
 
@@ -29,13 +31,17 @@ class DiscreteMLPPolicyNetwork(AbstractPolicyNetwork):
         return self.model(transformed_state)
 
     def get_action(self, state):
-        pass
-
-    def get_actionprob(self, state):
-        pass
+        ac_logits = self.forward(state)
+        ac_probs = F.softmax(ac_logits, dim=0)
+        ac_dist = Categorical(ac_probs)
+        ac = ac_dist.sample()
+        return np.array(ac), ac_probs[ac]
 
     def get_entropy(self, state):
-        pass
+        ac_logits = self.forward(state)
+        ac_probs = F.softmax(ac_logits, dim=0)
+        ac_dist = Categorical(ac_probs)
+        return ac_dist.entropy()
 
 
 class ContinuousMLPPolicyNetwork(AbstractPolicyNetwork):

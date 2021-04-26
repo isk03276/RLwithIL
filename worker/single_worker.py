@@ -1,5 +1,5 @@
-class Worker:
-    def __init__(self, env, policy_network, buffer, value_network=None):
+class SingleWorker:
+    def __init__(self, env, policy_network, buffer = None, value_network=None):
         self.env = env
         self.policy_network = policy_network
         self.value_network = value_network

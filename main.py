@@ -1,5 +1,7 @@
 import gym
 from network.policy_network_factory import PolicyNetworkFactory
+from common.network_setting import MLPNetworkSetting
+from common.torch_utils import TorchUtils
 
 
 class Test:
@@ -11,9 +13,12 @@ class Test:
         input_space = env.observation_space
         output_space = env.action_space
         policy_network_factory = PolicyNetworkFactory()
-        network_setting = (3, 100, )
-        policy_network = PolicyNetworkFactory.get_network(input_space, output_space, network_setting)
-
+        network_setting = MLPNetworkSetting()
+        policy_network = policy_network_factory.get_network(input_space, output_space,
+                                                            network_setting, TorchUtils.get_device())
+        state = env.reset()
+        print(state)
+        print(policy_network(state))
 
 if __name__ == "__main__":
     test = Test()

@@ -1,5 +1,5 @@
 class MLPNetworkSetting:
-    def __init__(self, hidden_units=(100,100), hidden_activations=("tanh", "tanh"), output_activation="linear"):
+    def __init__(self, hidden_units=(100, 100), hidden_activations=("relu", "relu"), output_activation="linear"):
         assert len(hidden_units) == len(hidden_activations)
 
         self.hidden_units = hidden_units

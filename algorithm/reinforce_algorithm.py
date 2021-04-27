@@ -1,7 +1,7 @@
 from algorithm.abstract_rl_algorithm import AbstractRLAlgorithm
 from common.rl_utils import RLUtils
 from worker.single_worker import SingleWorker
-from common.torch_utils import TorchUtils
+from common.logger import TensorboardLogger
 
 import torch.optim as optim
 import torch
@@ -18,6 +18,8 @@ class REINFORCEAlgorithm(AbstractRLAlgorithm):
         self.policy_network_optimizer = optim.Adam(self.policy_network.parameters(), lr=self.lr)
         self.worker = SingleWorker(self.env, self.policy_network)
 
+        self.logger = TensorboardLogger(str(self))
+
     def train(self, max_training_step):
         for training_step in range(max_training_step):
             trajectory = self.worker.sample_trajectory(-1, False)
@@ -26,8 +28,9 @@ class REINFORCEAlgorithm(AbstractRLAlgorithm):
             loss = self.estimate_policy_loss(obs, acs, ac_logprobs, rews, nobs)
             self.optimize_policy_network(loss)
 
-            print(sum(rews) / len(rews))
-            print(loss)
+            print(sum(rews), loss)
+            self.logger.log("episodic reward", sum(rews), training_step)
+            self.logger.log("policy loss", loss, training_step)
 
     def estimate_policy_loss(self, obs, acs, ac_logprobs, rews, nobs):
         returns = RLUtils.get_return(rews, self.gamma)

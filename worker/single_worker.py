@@ -1,7 +1,3 @@
-import numpy as np
-import torch
-
-
 class SingleWorker:
     def __init__(self, env, policy_network, buffer=None, value_network=None):
         self.env = env

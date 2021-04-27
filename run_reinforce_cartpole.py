@@ -14,7 +14,7 @@ if __name__ == "__main__":
     network_setting = MLPNetworkSetting()
     policy_network = policy_network_factory.get_network(input_space, output_space,
                                                         network_setting, TorchUtils.get_device())
-    algo = REINFORCEAlgorithm(env, policy_network, 0.999, 0.0001)
-    algo.train(1000000)
+    algo = REINFORCEAlgorithm(env, policy_network, 0.99, 0.001)
+    algo.train(1000)
 
     env.close()

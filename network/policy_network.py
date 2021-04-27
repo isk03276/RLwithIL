@@ -5,8 +5,6 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.distributions import Categorical
 
-import numpy as np
-
 
 class DiscreteMLPPolicyNetwork(AbstractPolicyNetwork):
     def __init__(self, input_dim, output_dim, network_setting, device):
@@ -35,13 +33,14 @@ class DiscreteMLPPolicyNetwork(AbstractPolicyNetwork):
         ac_probs = F.softmax(ac_logits, dim=0)
         ac_dist = Categorical(ac_probs)
         ac = ac_dist.sample()
-        return np.array(ac), ac_probs[ac]
+        return ac.item(), ac_dist.log_prob(ac)
 
     def get_entropy(self, state):
         ac_logits = self.forward(state)
         ac_probs = F.softmax(ac_logits, dim=0)
         ac_dist = Categorical(ac_probs)
         return ac_dist.entropy()
+
 
 
 class ContinuousMLPPolicyNetwork(AbstractPolicyNetwork):
@@ -52,9 +51,6 @@ class ContinuousMLPPolicyNetwork(AbstractPolicyNetwork):
         pass
 
     def get_action(self, state):
-        pass
-
-    def get_actionprob(self, state):
         pass
 
     def get_entropy(self, state):

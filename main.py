@@ -29,7 +29,8 @@ class Test:
         policy_network = policy_network_factory.get_network(input_space, output_space,
                                                             network_setting, TorchUtils.get_device())
         worker = SingleWorker(env, policy_network)
-        print(worker.sample_trajectory(10))
+        print(worker.sample_trajectory(10, False))
+
 
 if __name__ == "__main__":
     test = Test()

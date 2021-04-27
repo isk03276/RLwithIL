@@ -1,9 +1,11 @@
 import abc
+import torch.nn as nn
 
+from common.torch_utils import TorchUtils
 from network.abstract_network import AbstractNetwork
 
 
-class AbstractPolicyNetwork(AbstractNetwork, abc.ABC):
+class AbstractValueNetwork(AbstractNetwork, abc.ABC):
     def __init__(self, input_dim, output_dim, network_setting, device):
         AbstractNetwork.__init__(self, input_dim, output_dim, network_setting, device)
 
@@ -12,9 +14,5 @@ class AbstractPolicyNetwork(AbstractNetwork, abc.ABC):
         pass
 
     @abc.abstractmethod
-    def get_action(self, input):
-        pass
-
-    @abc.abstractmethod
-    def get_entropy(self, input):
+    def get_value(self, input):
         pass

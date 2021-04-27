@@ -1,28 +1,17 @@
 from network.abstract_policy_network import AbstractPolicyNetwork
 from common.torch_utils import TorchUtils
 
+import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch.distributions import Categorical
+from torch.distributions import Categorical, Normal
+import numpy as np
 
 
 class DiscreteMLPPolicyNetwork(AbstractPolicyNetwork):
     def __init__(self, input_dim, output_dim, network_setting, device):
         AbstractPolicyNetwork.__init__(self, input_dim, output_dim, network_setting, device)
         self.model = self._build_network()
-
-    def _build_network(self):
-        model = []
-        last_input_dim = self.input_dim
-        for i in range(self.num_layers):
-            model.append(nn.Linear(last_input_dim, self.hidden_units[i]))
-            model.append(TorchUtils.get_activation_fn(self.hidden_activations[i])())
-            last_input_dim = self.hidden_units[i]
-        model.append(nn.Linear(last_input_dim, self.output_dim))
-        last_activation = TorchUtils.get_activation_fn(self.output_activation)
-        if last_activation is not None:
-            model.append(last_activation)
-        return nn.Sequential(*model).to(self.device)
 
     def forward(self, state):
         transformed_state = TorchUtils.transform_input(state)
@@ -42,19 +31,33 @@ class DiscreteMLPPolicyNetwork(AbstractPolicyNetwork):
         return ac_dist.entropy()
 
 
-
 class ContinuousMLPPolicyNetwork(AbstractPolicyNetwork):
     def __init__(self, input_dim, output_dim, network_setting, device):
-        AbstractPolicyNetwork.__init__(input_dim, output_dim, network_setting, device)
+        AbstractPolicyNetwork.__init__(self, input_dim, output_dim, network_setting, device)
+        self.model = self._build_network()
 
-    def build_network(self):
-        pass
+        self.log_std = np.ones(self.output_dim, dtype=np.float32)
+        self.log_std = nn.Parameter(torch.Tensor(self.log_std))
+
+    def forward(self, state):
+        transformed_state = TorchUtils.transform_input(state)
+        return self.model(transformed_state)
 
     def get_action(self, state):
-        pass
+        mu = self.forward(state)
+        std = torch.exp(self.log_std)
+
+        ac_dist = Normal(mu, std)
+        ac = ac_dist.sample()
+        ac_logprob = ac_dist.log_prob(ac).sum()
+        return ac, ac_logprob
 
     def get_entropy(self, state):
-        pass
+        mu = self.forward(state)
+        std = torch.exp(self.log_std)
+
+        ac_dist = Normal(mu, std)
+        return ac_dist.entropy()
 
 
 class DiscreteCNNPolicyNetwork(AbstractPolicyNetwork):

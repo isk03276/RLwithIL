@@ -1,8 +1,11 @@
 import gym
 from network.policy_network_factory import PolicyNetworkFactory
+from network.value_network_factory import ValueNetworkFactory
 from common.network_setting import MLPNetworkSetting
 from common.torch_utils import TorchUtils
 from worker.single_worker import SingleWorker
+
+import torch
 
 
 class Test:
@@ -18,7 +21,25 @@ class Test:
         policy_network = policy_network_factory.get_network(input_space, output_space,
                                                             network_setting, TorchUtils.get_device())
         state = env.reset()
-        print(policy_network.get_action(state))
+        ac = policy_network.get_action(state)
+        next_state, _, _, _ = env.step(ac)
+
+        input = torch.stack(state, next_state)
+        print(policy_network(input))
+
+    def value_network_test(self):
+        env = self.env_test()
+        input_space = env.observation_space
+        output_space = env.action_space
+        value_network_factory = ValueNetworkFactory()
+        network_setting = MLPNetworkSetting(output_activation="linear")
+        value_network = value_network_factory.get_network(input_space, output_space,
+                                                            network_setting, TorchUtils.get_device())
+        state = env.reset()
+        value = value_network.get_value(state)
+        print(value)
+
+
 
     def worker_test(self):
         env = self.env_test()
@@ -34,4 +55,4 @@ class Test:
 
 if __name__ == "__main__":
     test = Test()
-    test.policy_network_test()
+    test.value_network_test()

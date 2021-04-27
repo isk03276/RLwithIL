@@ -9,10 +9,11 @@ from algorithm.reinforce_algorithm import REINFORCEAlgorithm
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="reinforce algorithm for gym env")
-    parser.add_argument("--env-name", type=str, default="CartPole-v0")
+    parser.add_argument("--env-name", type=str, default="MountainCarContinuous-v0")
     parser.add_argument("--lr", type=float, help="learning rate of policy network", default=0.001)
     parser.add_argument("--gamma", type=float, help="discounted rate", default=0.99)
-    parser.add_argument("--max-training-step", type=int, help="max episode size for learning", default=500)
+    parser.add_argument("--max-training-step", type=int, help="max episode size for learning", default=10000)
+    parser.add_argument("--epoch", type=int, help="epoch for learning policy network", default=3)
     args = parser.parse_args()
 
     env = gym.make(args.env_name)
@@ -22,7 +23,7 @@ if __name__ == "__main__":
     network_setting = MLPNetworkSetting()
     policy_network = policy_network_factory.get_network(input_space, output_space,
                                                         network_setting, TorchUtils.get_device())
-    algo = REINFORCEAlgorithm(env, policy_network, args.gamma, args.lr)
+    algo = REINFORCEAlgorithm(env, policy_network, args.gamma, args.lr, args.epoch)
     algo.train(args.max_training_step)
 
     env.close()

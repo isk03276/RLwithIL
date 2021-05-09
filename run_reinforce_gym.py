@@ -26,4 +26,6 @@ if __name__ == "__main__":
     algo = REINFORCEAlgorithm(env, policy_network, args.gamma, args.lr, args.epoch)
     algo.train(args.max_training_step)
 
+    TorchUtils.save_model(policy_network, str(algo), env.unwrapped.spec.id)
+
     env.close()

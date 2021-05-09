@@ -29,3 +29,13 @@ class TorchUtils:
         if not isinstance(input, torch.Tensor):
             input = torch.from_numpy(np.array(input)).float()
         return input
+
+    @classmethod
+    def save_model(cls, network, env_name, algo_name):
+        path = "model/" + env_name + algo_name
+        torch.save(network.state_dict(), path)
+
+    @classmethod
+    def load_model(cls, network, path):
+        network.load_state_dict(torch.load(path))
+        return network

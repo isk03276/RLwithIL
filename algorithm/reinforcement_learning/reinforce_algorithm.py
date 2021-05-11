@@ -1,4 +1,4 @@
-from algorithm.abstract_rl_algorithm import AbstractRLAlgorithm
+from algorithm.reinforcement_learning.abstract_rl_algorithm import AbstractRLAlgorithm
 from common.rl_utils import RLUtils
 from worker.single_worker import SingleWorker
 from common.logger import TensorboardLogger
@@ -14,15 +14,15 @@ class REINFORCEAlgorithm(AbstractRLAlgorithm):
         self.gamma = gamma
         self.lr = lr
 
-        self.policy_network = policy_network
-        self.policy_network_optimizer = optim.Adam(self.policy_network.parameters(), lr=self.lr)
+        self.set_policy_network(policy_network)
+        self.set_policy_network_optimizer(optim.Adam(self.policy_network.parameters(), lr=self.lr))
         self.worker = SingleWorker(self.env, self.policy_network)
 
-        self.logger = TensorboardLogger(str(self))
+        self.logger = TensorboardLogger(str(self), self.env.spec.id)
 
     def train(self, max_training_step):
         for training_step in range(max_training_step):
-            trajectory = self.worker.sample_trajectory(-1, False)
+            trajectory = self.worker.sample_trajectory(-1, True)
             obs, acs, ac_logprobs, rews, nobs, dones, values = trajectory
 
             loss = self.estimate_policy_loss(obs, acs, ac_logprobs, rews, nobs)

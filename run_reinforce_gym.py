@@ -23,7 +23,7 @@ if __name__ == "__main__":
     network_setting = MLPNetworkSetting()
     policy_network = policy_network_factory.get_network(input_space, output_space,
                                                         network_setting, TorchUtils.get_device())
-    algo = REINFORCEAlgorithm(env, policy_network, args.gamma, args.lr)
+    algo = REINFORCEAlgorithm(env, policy_network, args.gamma, args.lr, args.epoch)
     algo.train(args.max_training_step)
 
     TorchUtils.save_model(policy_network, str(algo), env.unwrapped.spec.id)

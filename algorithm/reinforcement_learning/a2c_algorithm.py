@@ -1,11 +1,12 @@
-from algorithm.reinforce_algorithm import AbstractRLAlgorithm
-from worker.multi_worker import MultiWorker
-from common.logger import TensorboardLogger
-
 import torch.optim as optim
 
+from algorithm.reinforcement_learning.base_rl_algorithm import BaseRLAlgorithm
+from worker.multi_worker import MultiWorker
+from common.logger import TensorboardLogger
+from common.torch_utils import TorchUtils
 
-class A2CAlgorithm(AbstractRLAlgorithm):
+
+class A2CAlgorithm(BaseRLAlgorithm):
     def __init__(self, env, policy_network, value_network, gamma,
                  lr, epoch):
         super().__init__(policy_network, value_network)
@@ -31,7 +32,7 @@ class A2CAlgorithm(AbstractRLAlgorithm):
             obs, acs, ac_logprobs, rews, nobs, dones, values, rets = trajectory
 
             loss = self.estimate_policy_loss(obs, acs, ac_logprobs, rews, nobs)
-            self.optimize_policy_network(loss)
+            TorchUtils.update_network(self.policy_network_optimizerloss)
 
             print(sum(rews), loss)
             self.logger.log("episodic reward", sum(rews), training_step)

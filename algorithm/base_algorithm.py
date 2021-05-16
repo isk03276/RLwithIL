@@ -1,13 +1,10 @@
 from abc import ABC, abstractmethod
 
 
-class AbstractAlgorithm(ABC):
+class BaseAlgorithm(ABC):
     def __init__(self, env, policy_network):
         self.env = env
         self.policy_network = policy_network
-
-        self.buffer = None
-
         self.policy_network_optimizer = None
 
     def set_policy_network(self, policy_network):
@@ -25,11 +22,6 @@ class AbstractAlgorithm(ABC):
     @abstractmethod
     def train(self):
         pass
-
-    def optimize_policy_network(self, loss):
-        self.policy_network_optimizer.zero_grad()
-        loss.backward()
-        self.policy_network_optimizer.step()
 
     @abstractmethod
     def estimate_policy_loss(self, *args):

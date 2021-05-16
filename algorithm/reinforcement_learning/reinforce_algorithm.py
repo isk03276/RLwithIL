@@ -1,34 +1,34 @@
-from algorithm.reinforcement_learning.abstract_rl_algorithm import AbstractRLAlgorithm
-from common.rl_utils import RLUtils
-from worker.single_worker import SingleWorker
-from common.logger import TensorboardLogger
-
 import torch.optim as optim
 import torch
 
+from algorithm.reinforcement_learning.base_rl_algorithm import BaseRLAlgorithm
+from worker.single_worker import SingleWorker
+from common.logger import TensorboardLogger
+from common.rl_utils import RLUtils
+from common.torch_utils import TorchUtils
 
-class REINFORCEAlgorithm(AbstractRLAlgorithm):
-    def __init__(self, env, policy_network, gamma, lr, epoch):
-        AbstractRLAlgorithm.__init__(self, policy_network, None)
 
-        self.env = env
+class REINFORCEAlgorithm(BaseRLAlgorithm):
+    def __init__(self, env, policy_network, gamma, lr, epoch=1):
+        super().__init__(env, policy_network, None)
+
         self.gamma = gamma
         self.lr = lr
         self.epoch = epoch
 
         self.set_policy_network(policy_network)
         self.set_policy_network_optimizer(optim.Adam(self.policy_network.parameters(), lr=self.lr))
-        self.worker = SingleWorker(self.env, self.policy_network)
+        self.set_worker(SingleWorker(self.env, self.policy_network))
 
         self.logger = TensorboardLogger(str(self), self.env.spec.id)
 
     def train(self, max_training_step):
         for training_step in range(max_training_step):
-            trajectory = self.worker.sample_trajectory(-1, True)
+            trajectory = self.worker.sample_trajectory(-1, False)
             obs, acs, ac_logprobs, rews, nobs, dones, values = trajectory
 
             loss = self.estimate_policy_loss(obs, acs, ac_logprobs, rews, nobs)
-            self.optimize_policy_network(loss)
+            TorchUtils.update_network(self.policy_network_optimizer, loss)
 
             print(sum(rews), loss)
             self.logger.log("episodic reward", sum(rews), training_step)

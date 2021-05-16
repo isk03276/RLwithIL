@@ -39,3 +39,9 @@ class TorchUtils:
     def load_model(cls, network, path):
         network.load_state_dict(torch.load(path))
         return network
+
+    @classmethod
+    def update_network(cls, optimizer, loss):
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()

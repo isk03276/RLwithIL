@@ -46,4 +46,3 @@ class A2CAlgorithm(BaseRLAlgorithm):
 
     def __str__(self):
         return "A2C"
-

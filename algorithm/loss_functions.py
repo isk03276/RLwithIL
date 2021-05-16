@@ -11,3 +11,4 @@ class RLLossFunctions:
     @classmethod
     def estimate_td_loss(values, returns):
         loss = F.smooth_l1_loss(values, returns)
+        return loss.mean()

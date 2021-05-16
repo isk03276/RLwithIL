@@ -4,6 +4,7 @@ from network.value_network_factory import ValueNetworkFactory
 from common.network_setting import MLPNetworkSetting
 from common.torch_utils import TorchUtils
 from worker.single_worker import SingleWorker
+from test.test_rl_utils import *
 
 import torch
 
@@ -50,7 +51,11 @@ class Test:
         worker = SingleWorker(env, policy_network)
         print(worker.sample_trajectory(10, False))
 
+    def check_test(self):
+        check_td_nstep_return()
+
+
 
 if __name__ == "__main__":
     test = Test()
-    test.value_network_test()
+    test.check_test()

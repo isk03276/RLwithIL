@@ -10,7 +10,7 @@ import torch
 
 class Test:
     def env_test(self):
-        return gym.make("CartPole-v1")
+        return gym.make("MountainCarContinuous-v0")
 
     def policy_network_test(self):
         env = self.env_test()
@@ -38,8 +38,6 @@ class Test:
         state = env.reset()
         value = value_network.get_value(state)
         print(value)
-
-
 
     def worker_test(self):
         env = self.env_test()

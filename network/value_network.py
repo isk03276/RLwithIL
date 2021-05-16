@@ -34,7 +34,7 @@ class ContinuousMLPPolicyNetwork(AbstractValueNetwork):
         return self.model(transformed_state)
 
     def get_value(self, state):
-        pass
+        return self.forward(state)
 
 class DiscreteCNNPolicyNetwork(AbstractValueNetwork):
     pass

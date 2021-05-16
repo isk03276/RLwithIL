@@ -8,11 +8,13 @@ import torch
 
 
 class REINFORCEAlgorithm(AbstractRLAlgorithm):
-    def __init__(self, env, policy_network, gamma, lr):
-        AbstractRLAlgorithm.__init__(self, env, policy_network, None)
+    def __init__(self, env, policy_network, gamma, lr, epoch):
+        AbstractRLAlgorithm.__init__(self, policy_network, None)
 
+        self.env = env
         self.gamma = gamma
         self.lr = lr
+        self.epoch = epoch
 
         self.set_policy_network(policy_network)
         self.set_policy_network_optimizer(optim.Adam(self.policy_network.parameters(), lr=self.lr))
@@ -35,7 +37,7 @@ class REINFORCEAlgorithm(AbstractRLAlgorithm):
     def estimate_policy_loss(self, obs, acs, ac_logprobs, rews, nobs):
         returns = RLUtils.get_return(rews, self.gamma)
         loss = -torch.stack(ac_logprobs) * returns
-        return loss.sum()
+        return loss.mean()
 
     def __str__(self):
         return "REINFORCE"

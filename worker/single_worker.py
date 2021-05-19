@@ -1,19 +1,12 @@
-class SingleWorker:
-    def __init__(self, env, policy_network, buffer=None, value_network=None):
+from worker.base_worker import BaseWorker
+
+
+class SingleWorker(BaseWorker):
+    def __init__(self, env, policy_network, buffer, value_network=None):
+        super().__init__(policy_network, buffer, value_network)
         self.env = env
-        self.policy_network = policy_network
-        self.value_network = value_network
-        self.buffer = buffer
 
     def sample_trajectory(self, sample_size=-1, rendering=False):
-        obs = []
-        acs = []
-        ac_logprobs = []
-        rews = []
-        nobs = []
-        dones = []
-        values = []
-
         ob = self.env.reset()
 
         current_t = 0
@@ -25,18 +18,14 @@ class SingleWorker:
             if rendering:
                 self.env.render()
 
-            obs.append(ob)
-            acs.append(ac)
-            ac_logprobs.append(ac_logprob)
-            rews.append(rew)
-            nobs.append(nob)
-            dones.append(done)
             if self.value_network is not None:
                 value = self.value_network(ob)
-                values.append(value)
+                next_value = self.value_network(nob)
             else:
-                values.append(None)
+                value = None
+                next_value = None
 
+            self.buffer.add(ob, ac, ac_logprob, rew, nob, done, value, next_value)
             current_t += 1
             ob = nob
 
@@ -47,4 +36,4 @@ class SingleWorker:
                     break
                 else:
                     ob = self.env.reset()
-        return obs, acs, ac_logprobs, rews, nobs, dones, values
+        return self.buffer.sample(sample_size)

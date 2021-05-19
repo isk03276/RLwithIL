@@ -7,6 +7,7 @@ from worker.single_worker import SingleWorker
 from common.logger import TensorboardLogger
 from common.rl_utils import RLUtils
 from common.torch_utils import TorchUtils
+from buffer.on_policy_buffer import OnPolicyBuffer
 
 
 class REINFORCEAlgorithm(BaseRLAlgorithm):
@@ -19,15 +20,14 @@ class REINFORCEAlgorithm(BaseRLAlgorithm):
 
         self.set_policy_network(policy_network)
         self.set_policy_network_optimizer(optim.Adam(self.policy_network.parameters(), lr=self.lr))
-        self.set_worker(SingleWorker(self.env, self.policy_network))
+        self.set_worker(SingleWorker(self.env, self.policy_network, OnPolicyBuffer()))
 
         self.logger = TensorboardLogger(str(self), self.env.spec.id)
 
     def train(self, max_training_step):
         for training_step in range(max_training_step):
             trajectory = self.worker.sample_trajectory(-1, False)
-            obs, acs, ac_logprobs, rews, nobs, dones, values = trajectory
-
+            obs, acs, ac_logprobs, rews, nobs, dones, values, next_values = trajectory
             loss = self.estimate_policy_loss(ac_logprobs, rews)
             TorchUtils.update_network(self.policy_network_optimizer, loss)
 
@@ -37,7 +37,7 @@ class REINFORCEAlgorithm(BaseRLAlgorithm):
 
 
     def estimate_policy_loss(self, ac_logprobs, rews):
-        returns = RLUtils.get_return(rews, self.gamma)
+        returns = RLUtils.get_mc_return(rews, self.gamma)
         return RLLossFunctions.estimate_pg_loss(ac_logprobs, returns)
 
     def __str__(self):

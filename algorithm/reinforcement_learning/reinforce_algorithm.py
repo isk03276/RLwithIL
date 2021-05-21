@@ -12,7 +12,7 @@ from buffer.on_policy_buffer import OnPolicyBuffer
 
 class REINFORCEAlgorithm(BaseRLAlgorithm):
     def __init__(self, env, policy_network, gamma, lr, epoch=1):
-        super().__init__(env, policy_network, None)
+        super().__init__(env, policy_network, None, lr)
 
         self.gamma = gamma
         self.lr = lr

@@ -5,8 +5,8 @@ from algorithm.base_algorithm import BaseAlgorithm
 
 
 class BaseRLAlgorithm(BaseAlgorithm):
-    def __init__(self, env, policy_network, value_network):
-        super().__init__(env, policy_network)
+    def __init__(self, env, policy_network, value_network, lr):
+        super().__init__(env, policy_network, lr)
 
         self.value_network = value_network
         self.value_network_optimizer = None

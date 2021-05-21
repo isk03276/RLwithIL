@@ -54,9 +54,7 @@ class RLUtils:
         for i in range(len(rews)-1, 0, -1):
             if i in divided_indexes:
                 returns[i] = rews[i] if dones[i] else next_values[i]
-            print(i, rews[i-1], returns[i])
             returns[i-1] = rews[i-1] + gamma*returns[i]
-
         return returns
 
     @classmethod

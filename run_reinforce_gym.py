@@ -12,7 +12,7 @@ if __name__ == "__main__":
     parser.add_argument("--env-name", type=str, default="CartPole-v0")
     parser.add_argument("--lr", type=float, help="learning rate of policy network", default=0.001)
     parser.add_argument("--gamma", type=float, help="discounted rate", default=0.99)
-    parser.add_argument("--max-training-step", type=int, help="max episode size for learning", default=3000)
+    parser.add_argument("--max-training-step", type=int, help="max episode size for learning", default=1000)
     parser.add_argument("--epoch", type=int, help="epoch for learning policy network", default=1)
     args = parser.parse_args()
 

@@ -15,7 +15,6 @@ class REINFORCEAlgorithm(BaseRLAlgorithm):
         super().__init__(env, policy_network, None, lr)
 
         self.gamma = gamma
-        self.lr = lr
         self.epoch = epoch
 
         self.set_policy_network(policy_network)

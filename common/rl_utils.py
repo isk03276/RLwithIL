@@ -37,15 +37,13 @@ class RLUtils:
         return result
 
     @classmethod
-    def get_nstep_td_return(cls, rews, values, dones, gamma, n_step=1):
+    def get_nstep_td_return(cls, rews, next_values, dones, gamma, n_step=1):
         """
         Get n-step TD return.
         R = 0 if done(s,a) else v(s')
         R = r(s,a) + gamma*R
         """
-        rews = rews[:-1]
-        dones = dones[:-1]
-        next_values = values[1:]
+        next_values = next_values
 
         returns = np.zeros_like(rews, dtype=np.float)
 
@@ -60,7 +58,5 @@ class RLUtils:
         return returns
 
     @classmethod
-    def get_advantage(cls, rews, values, dones, gamma):
-        q_values = []
-        for i in range(len(rews)):
-            q_values.append(rews[i] + gamma*values[i+1])
+    def get_advantage(cls, values, rets):
+        return values - rets

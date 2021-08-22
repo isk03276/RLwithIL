@@ -1,23 +1,16 @@
 from multiprocessing import Process
 
+from worker.base_worker import BaseWorker
 
-class MultiWorker:
-    def __init__(self, env, policy_network, value_network=None):
-        self.env = env
-        self.policy_network = policy_network
-        self.value_network = value_network
 
-        self._init_buffer()
-
-    def _initialize_buffer(self):
-        self.obs = []
-        self.acs = []
-        self.ac_logprobs = []
-        self.rews = []
-        self.nobs = []
-        self.dones = []
-        self.values = []
-        self.rets = []
+class MultiWorker(BaseWorker):
+    def __init__(self, envs, policy_network, num_worker, buffer=None, value_network=None):
+        super().__init__(policy_network, buffer, value_network)
+        self.envs = envs
+        self.num_worker = num_worker
+        
+        self.process_list = Process(self.num_worker)
+        assert len(self.envs) == self.num_worker
 
     def sample_trajectory(self, sample_size=-1, rendering=False):
         ob = self.env.reset()
@@ -31,17 +24,18 @@ class MultiWorker:
             if rendering:
                 self.env.render()
 
-            obs.append(ob)
-            acs.append(ac)
-            ac_logprobs.append(ac_logprob)
-            rews.append(rew)
-            nobs.append(nob)
-            dones.append(done)
+            self.obs.append(ob)
+            self.acs.append(ac)
+            self.ac_logprobs.append(ac_logprob)
+            self.rews.append(rew)
+            self.nobs.append(nob)
+            self.dones.append(done)
+
             if self.value_network is not None:
                 value = self.value_network(ob)
-                values.append(value)
+                self.values.append(value)
             else:
-                values.append(None)
+                self.values.append(None)
 
             current_t += 1
             ob = nob

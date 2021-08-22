@@ -5,7 +5,7 @@ from network.policy_network_factory import PolicyNetworkFactory
 from network.value_network_factory import ValueNetworkFactory
 from common.network_setting import MLPNetworkSetting
 from common.torch_utils import TorchUtils
-from algorithm.a2c_algorithm import A2CAlgorithm
+from algorithm.reinforcement_learning.a2c_algorithm import A2CAlgorithm
 
 
 if __name__ == "__main__":
@@ -16,6 +16,7 @@ if __name__ == "__main__":
     parser.add_argument("--timesteps-per-learning", type=float, help="discounted rate", default=0.99)
     parser.add_argument("--max-training-step", type=int, help="max episode size for learning", default=10000)
     parser.add_argument("--epoch", type=int, help="epoch for learning policy network", default=3)
+    parser.add_argument("--n-step", type=int, help="n-step for td learning", default=4)
     args = parser.parse_args()
 
     env = gym.make(args.env_name)
@@ -29,7 +30,7 @@ if __name__ == "__main__":
     value_network_factory = ValueNetworkFactory()
     value_network = value_network_factory.get_network(input_space, output_space,
                                                         network_setting, TorchUtils.get_device())
-    algo = A2CAlgorithm(env, policy_network, value_network, args.gamma, args.lr, args.epoch)
+    algo = A2CAlgorithm(env, policy_network, value_network, args.gamma, args.lr, args.epoch, args.n_step)
 
     algo.train(args.max_training_step, args.timesteps_per_learning)
 

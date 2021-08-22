@@ -2,8 +2,10 @@ from abc import ABC, abstractmethod
 
 
 class BaseAlgorithm(ABC):
-    def __init__(self, env, policy_network):
+    def __init__(self, env, policy_network, lr):
         self.env = env
+        self.lr = lr
+        
         self.policy_network = policy_network
         self.policy_network_optimizer = None
 
@@ -20,7 +22,7 @@ class BaseAlgorithm(ABC):
         return self.policy_network_optimizer
 
     @abstractmethod
-    def train(self):
+    def train(self, *args):
         pass
 
     @abstractmethod

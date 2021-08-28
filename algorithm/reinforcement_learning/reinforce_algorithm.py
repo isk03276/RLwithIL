@@ -18,7 +18,9 @@ class REINFORCEAlgorithm(BaseRLAlgorithm):
         self.epoch = epoch
 
         self.set_policy_network(policy_network)
-        self.set_policy_network_optimizer(optim.Adam(self.policy_network.parameters(), lr=self.lr))
+        self.set_policy_network_optimizer(
+            optim.Adam(self.policy_network.parameters(), lr=self.lr)
+        )
         self.set_worker(SingleWorker(self.env, self.policy_network, OnPolicyBuffer()))
 
         self.logger = TensorboardLogger(str(self), self.env.spec.id)
@@ -34,7 +36,6 @@ class REINFORCEAlgorithm(BaseRLAlgorithm):
             self.logger.log("episodic reward", sum(rews), training_step)
             self.logger.log("policy loss", loss, training_step)
 
-
     def estimate_policy_loss(self, ac_logprobs, rews):
         returns = RLUtils.get_mc_return(rews, self.gamma)
         return RLLossFunctions.estimate_pg_loss(ac_logprobs, returns)
@@ -44,4 +45,3 @@ class REINFORCEAlgorithm(BaseRLAlgorithm):
 
     def estimate_value_loss(self, *args):
         pass
-

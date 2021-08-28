@@ -4,11 +4,13 @@ from worker.base_worker import BaseWorker
 
 
 class MultiWorker(BaseWorker):
-    def __init__(self, envs, policy_network, num_worker, buffer=None, value_network=None):
+    def __init__(
+        self, envs, policy_network, num_worker, buffer=None, value_network=None
+    ):
         super().__init__(policy_network, buffer, value_network)
         self.envs = envs
         self.num_worker = num_worker
-        
+
         self.process_list = Process(self.num_worker)
         assert len(self.envs) == self.num_worker
 

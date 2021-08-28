@@ -16,7 +16,7 @@ class RLUtils:
         """
         returns = [rews[-1]]
         for i in range(1, len(rews)):
-            returns.append(rews[len(rews)-1-i] + gamma*returns[i-1])
+            returns.append(rews[len(rews) - 1 - i] + gamma * returns[i - 1])
         returns.reverse()
         return torch.Tensor(returns)
 
@@ -49,10 +49,10 @@ class RLUtils:
 
         returns[-1] = next_values[-1]
         divided_indexes = cls.divice_list(dones, n_step)
-        for i in range(len(rews)-1, 0, -1):
+        for i in range(len(rews) - 1, 0, -1):
             if i in divided_indexes:
                 returns[i] = rews[i] if dones[i] else next_values[i]
-            returns[i-1] = rews[i-1] + gamma*returns[i]
+            returns[i - 1] = rews[i - 1] + gamma * returns[i]
         return returns
 
     @classmethod

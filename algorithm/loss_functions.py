@@ -13,6 +13,7 @@ class RLLossFunctions:
         loss = F.smooth_l1_loss(values, returns)
         return loss.mean()
 
+
 class ILLossFunction:
     @classmethod
     def estimate_bc_loss(cls, acs, demo_acs):

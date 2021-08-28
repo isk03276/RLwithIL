@@ -10,7 +10,9 @@ import numpy as np
 
 class DiscreteMLPPolicyNetwork(AbstractPolicyNetwork):
     def __init__(self, input_dim, output_dim, network_setting, device):
-        AbstractPolicyNetwork.__init__(self, input_dim, output_dim, network_setting, device)
+        AbstractPolicyNetwork.__init__(
+            self, input_dim, output_dim, network_setting, device
+        )
         self.model = self._build_network()
 
     def forward(self, state):
@@ -33,7 +35,9 @@ class DiscreteMLPPolicyNetwork(AbstractPolicyNetwork):
 
 class ContinuousMLPPolicyNetwork(AbstractPolicyNetwork):
     def __init__(self, input_dim, output_dim, network_setting, device):
-        AbstractPolicyNetwork.__init__(self, input_dim, output_dim, network_setting, device)
+        AbstractPolicyNetwork.__init__(
+            self, input_dim, output_dim, network_setting, device
+        )
         self.model = self._build_network()
 
         self.log_std = np.ones(self.output_dim, dtype=np.float32)

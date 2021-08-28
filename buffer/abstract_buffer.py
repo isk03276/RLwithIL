@@ -6,7 +6,7 @@ class AbstractBuffer(abc.ABC):
     AC_IDX = 1
     AC_LOGPROB_IDX = 2
     REW_IDX = 3
-    NOB_IDX =4
+    NOB_IDX = 4
     DONE_IDX = 5
     VALUE_IDX = 6
     NEXT_VALUE_IDX = 7
@@ -28,5 +28,3 @@ class AbstractBuffer(abc.ABC):
 
     def clean_buffer(self):
         self._buffer = []
-
-

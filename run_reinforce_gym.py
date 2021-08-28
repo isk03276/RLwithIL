@@ -10,10 +10,19 @@ from algorithm.reinforcement_learning.reinforce_algorithm import REINFORCEAlgori
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="reinforce algorithm for gym env")
     parser.add_argument("--env-name", type=str, default="CartPole-v0")
-    parser.add_argument("--lr", type=float, help="learning rate of policy network", default=0.001)
+    parser.add_argument(
+        "--lr", type=float, help="learning rate of policy network", default=0.001
+    )
     parser.add_argument("--gamma", type=float, help="discounted rate", default=0.99)
-    parser.add_argument("--max-training-step", type=int, help="max episode size for learning", default=1000)
-    parser.add_argument("--epoch", type=int, help="epoch for learning policy network", default=1)
+    parser.add_argument(
+        "--max-training-step",
+        type=int,
+        help="max episode size for learning",
+        default=1000,
+    )
+    parser.add_argument(
+        "--epoch", type=int, help="epoch for learning policy network", default=1
+    )
     args = parser.parse_args()
 
     env = gym.make(args.env_name)
@@ -21,8 +30,9 @@ if __name__ == "__main__":
     output_space = env.action_space
     policy_network_factory = PolicyNetworkFactory()
     network_setting = MLPNetworkSetting()
-    policy_network = policy_network_factory.get_network(input_space, output_space,
-                                                        network_setting, TorchUtils.get_device())
+    policy_network = policy_network_factory.get_network(
+        input_space, output_space, network_setting, TorchUtils.get_device()
+    )
     algo = REINFORCEAlgorithm(env, policy_network, args.gamma, args.lr, args.epoch)
     algo.train(args.max_training_step)
 

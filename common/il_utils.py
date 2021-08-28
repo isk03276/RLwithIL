@@ -22,14 +22,13 @@ class ILUtils:
             demo_acs.append(np.array(acs))
 
         np.savez(save_path, obs=np.array(demo_obs), acs=np.array(demo_acs))
-    
 
 
 class DemodataManager:
     def __init__(self, demodata_path, mode="random"):
         self.load_demodata(demodata_path)
         self.mode = mode
-        
+
         if self.mode == "full sequence":
             pass
         elif self.mode == "partial sequence":
@@ -44,8 +43,8 @@ class DemodataManager:
 
     def load_demodata(self, demodata_path):
         demodata = np.load(demodata_path, allow_pickle=True)
-        self.obs = demodata['obs']
-        self.acs = demodata['acs']
+        self.obs = demodata["obs"]
+        self.acs = demodata["acs"]
 
     def _flatten_demodata(self):
         self.obs = self._flatten_array(self.obs)
@@ -69,11 +68,11 @@ class DemodataManager:
 
         if batch_size == -1:
             return self.obs, self.acs
-        
+
         if self.idx + batch_size > self.demodata_size:
             new_idx = batch_size - self.demodata_size + self.idx
-            _obs = np.concatenate((self.obs[self.idx:], self.obs[:new_idx]), axis=0)
-            _acs = np.concatenate((self.acs[self.idx:], self.acs[:new_idx]), axis=0)
+            _obs = np.concatenate((self.obs[self.idx :], self.obs[:new_idx]), axis=0)
+            _acs = np.concatenate((self.acs[self.idx :], self.acs[:new_idx]), axis=0)
         else:
             new_idx = self.idx + batch_size
             _obs = self.obs[self.idx : self.idx + batch_size]
@@ -81,4 +80,3 @@ class DemodataManager:
 
         self.idx = new_idx
         return _obs, _acs
-

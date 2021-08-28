@@ -9,4 +9,3 @@ class TensorboardLogger:
 
     def log(self, name, data, step):
         self.writer.add_scalar(name, data, step)
-

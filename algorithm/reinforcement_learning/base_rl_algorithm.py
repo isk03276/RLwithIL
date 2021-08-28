@@ -3,7 +3,6 @@ from abc import abstractmethod
 from algorithm.base_algorithm import BaseAlgorithm
 
 
-
 class BaseRLAlgorithm(BaseAlgorithm):
     def __init__(self, env, policy_network, value_network, lr):
         super().__init__(env, policy_network, lr)

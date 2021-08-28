@@ -6,7 +6,7 @@ class SingleWorker(BaseWorker):
         super().__init__(policy_network, buffer, value_network)
         self.env = env
 
-    def sample_trajectory(self, sample_size=-1, rendering=False):
+    def _sample_trajectory(self, sample_size=-1, rendering=False):
         ob = self.env.reset()
 
         current_t = 0
@@ -36,4 +36,5 @@ class SingleWorker(BaseWorker):
                     break
                 else:
                     ob = self.env.reset()
-        return self.buffer.sample(sample_size)
+        sampled_data = self.buffer.sample(sample_size)
+        yield sampled_data

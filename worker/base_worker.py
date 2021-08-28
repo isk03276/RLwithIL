@@ -7,6 +7,10 @@ class BaseWorker(ABC):
         self.value_network = value_network
         self.buffer = buffer
 
-    @abstractmethod
     def sample_trajectory(self, sample_size=-1, rendering=False):
+        data = next(self._sample_trajectory(sample_size, rendering))
+        return data
+
+    @abstractmethod
+    def _sample_trajectory(self, sample_size=-1, rendering=False):
         pass

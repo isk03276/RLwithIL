@@ -2,3 +2,4 @@ model/
 log/
 *.pyc
 demodata/
+.vscode

@@ -1,11 +1,13 @@
-from network.abstract_policy_network import AbstractPolicyNetwork
-from common.torch_utils import TorchUtils
+from typing import List, Tuple
 
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.distributions import Categorical, Normal
 import numpy as np
+
+from network.abstract_policy_network import AbstractPolicyNetwork
+from common.torch_utils import TorchUtils
 
 
 class DiscreteMLPPolicyNetwork(AbstractPolicyNetwork):
@@ -15,18 +17,26 @@ class DiscreteMLPPolicyNetwork(AbstractPolicyNetwork):
         )
         self.model = self._build_network()
 
-    def forward(self, state):
+    def forward(self, state: List[np.ndarray]) -> torch.Tensor:
         transformed_state = TorchUtils.transform_input(state)
         return self.model(transformed_state)
 
-    def get_action(self, state):
+    def get_action(self, state: List[np.ndarray]) -> Tuple[torch.Tensor, torch.Tensor]:
         ac_logits = self.forward(state)
         ac_probs = F.softmax(ac_logits, dim=0)
         ac_dist = Categorical(ac_probs)
         ac = ac_dist.sample()
-        return ac.item(), ac_dist.log_prob(ac)
+        return ac, ac_dist.log_prob(ac)
 
-    def get_entropy(self, state):
+    def get_ac_logprobs(
+        self, state: List[np.ndarray], ac: List[np.ndarray]
+    ) -> torch.Tensor:
+        ac_logits = self.forward(state)
+        ac_probs = F.softmax(ac_logits, dim=0)
+        ac_dist = Categorical(ac_probs)
+        return ac_dist.log_prob(torch.Tensor(ac))
+
+    def get_entropy(self, state: List[np.ndarray]) -> torch.Tensor:
         ac_logits = self.forward(state)
         ac_probs = F.softmax(ac_logits, dim=0)
         ac_dist = Categorical(ac_probs)

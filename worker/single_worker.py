@@ -6,7 +6,7 @@ class SingleWorker(BaseWorker):
         super().__init__(policy_network, buffer, value_network)
         self.env = env
 
-    def _sample_trajectory(self, sample_size=-1, rendering=False):
+    def _sample_trajectory(self, sample_size: int = -1, rendering: bool = False):
         ob = self.env.reset()
 
         current_t = 0
@@ -14,7 +14,7 @@ class SingleWorker(BaseWorker):
         while True:
             ac, ac_logprob = self.policy_network.get_action(ob)
 
-            nob, rew, done, _ = self.env.step(ac)
+            nob, rew, done, _ = self.env.step(ac.numpy())
             if rendering:
                 self.env.render()
 

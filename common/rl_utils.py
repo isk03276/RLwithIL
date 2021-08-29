@@ -1,4 +1,4 @@
-import copy
+from typing import List
 
 import numpy as np
 from numpy.core.shape_base import _accumulate
@@ -9,7 +9,7 @@ from common.torch_utils import TorchUtils
 
 class RLUtils:
     @classmethod
-    def get_mc_return(cls, rews, gamma):
+    def get_mc_return(cls, rews: List[float], gamma: float) -> torch.Tensor:
         """
         Get monte-carlo return.
         R = r(s,a) + gamma*R(s',a')
@@ -21,7 +21,7 @@ class RLUtils:
         return torch.Tensor(returns)
 
     @classmethod
-    def divice_list(cls, dones, n_step):
+    def divice_list(cls, dones: List[bool], n_step: int) -> List[bool]:
         """
         Get indexes of divided array for nstep learning
         """
@@ -37,7 +37,14 @@ class RLUtils:
         return result
 
     @classmethod
-    def get_nstep_td_return(cls, rews, next_values, dones, gamma, n_step=1):
+    def get_nstep_td_return(
+        cls,
+        rews: List[float],
+        next_values: List[torch.Tensor],
+        dones: List[bool],
+        gamma: list,
+        n_step: int = 1,
+    ) -> List[float]:
         """
         Get n-step TD return.
         R = 0 if done(s,a) else v(s')
@@ -56,5 +63,5 @@ class RLUtils:
         return returns
 
     @classmethod
-    def get_advantage(cls, values, rets):
+    def get_advantage(cls, values: np.ndarray, rets: np.ndarray) -> np.ndarray:
         return values - rets

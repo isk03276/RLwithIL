@@ -16,5 +16,9 @@ class AbstractPolicyNetwork(AbstractNetwork, abc.ABC):
         pass
 
     @abc.abstractmethod
+    def get_ac_logprobs(self, input, output):
+        pass
+
+    @abc.abstractmethod
     def get_entropy(self, input):
         pass

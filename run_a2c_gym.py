@@ -10,13 +10,15 @@ from algorithm.reinforcement_learning.a2c_algorithm import A2CAlgorithm
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="reinforce algorithm for gym env")
-    parser.add_argument("--env-name", type=str, default="MountainCarContinuous-v0")
+    parser.add_argument(
+        "--env-name", type=str, default="CartPole-v0"
+    )  # MountainCarContinuous-v0
     parser.add_argument(
         "--lr", type=float, help="learning rate of policy network", default=0.001
     )
     parser.add_argument("--gamma", type=float, help="discounted rate", default=0.99)
     parser.add_argument(
-        "--timesteps-per-learning", type=float, help="discounted rate", default=0.99
+        "--timesteps-per-learning", type=float, help="discounted rate", default=128
     )
     parser.add_argument(
         "--max-training-step",

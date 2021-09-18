@@ -1,5 +1,7 @@
 from worker.base_worker import BaseWorker
 
+import torch
+
 
 class SingleWorker(BaseWorker):
     def __init__(self, env, policy_network, buffer, value_network=None):
@@ -10,17 +12,20 @@ class SingleWorker(BaseWorker):
         ob = self.env.reset()
 
         current_t = 0
-
+        rews = 0
         while True:
-            ac, ac_logprob = self.policy_network.get_action(ob)
+            with torch.no_grad():
+                ac, ac_logprob = self.policy_network.get_action(ob)
 
             nob, rew, done, _ = self.env.step(ac.numpy())
+            rews += rew
             if rendering:
                 self.env.render()
 
             if self.value_network is not None:
-                value = self.value_network(ob)
-                next_value = self.value_network(nob)
+                with torch.no_grad():
+                    value = self.value_network(ob)
+                    next_value = self.value_network(nob)
             else:
                 value = None
                 next_value = None
@@ -32,6 +37,8 @@ class SingleWorker(BaseWorker):
             if sample_size != -1 and current_t >= sample_size:
                 break
             if done:
+                print("!!!", rews)
+                rews = 0
                 if sample_size == -1:
                     break
                 else:

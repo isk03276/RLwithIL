@@ -23,7 +23,7 @@ class DiscreteMLPValueNetwork(AbstractValueNetwork):
         return self.forward(state)
 
 
-class ContinuousMLPPolicyNetwork(AbstractValueNetwork):
+class ContinuousMLPValueNetwork(AbstractValueNetwork):
     def __init__(self, input_dim, output_dim, network_setting, device):
         AbstractValueNetwork.__init__(
             self, input_dim, output_dim, network_setting, device
@@ -41,9 +41,9 @@ class ContinuousMLPPolicyNetwork(AbstractValueNetwork):
         return self.forward(state)
 
 
-class DiscreteCNNPolicyNetwork(AbstractValueNetwork):
+class DiscreteCNNValueNetwork(AbstractValueNetwork):
     pass
 
 
-class ContinuousCNNPolicyNetwork(AbstractValueNetwork):
+class ContinuousCNNValueNetwork(AbstractValueNetwork):
     pass

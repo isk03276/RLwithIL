@@ -34,7 +34,7 @@ if __name__ == "__main__":
         input_space, output_space, network_setting, TorchUtils.get_device()
     )
     algo = REINFORCEAlgorithm(env, policy_network, args.gamma, args.lr, args.epoch)
-    algo.train(args.max_training_step)
+    algo.train(args.max_training_step, None)
 
     TorchUtils.save_model(policy_network, str(algo), env.unwrapped.spec.id)
 

@@ -36,14 +36,14 @@ class REINFORCEAlgorithm(BaseRLAlgorithm):
 
         self.logger = TensorboardLogger(str(self), self.env.spec.id)
 
-    def train(self, max_training_step: int):
+    def train(self, max_training_step: int, timesteps_per_learning: int):
         for training_step in range(max_training_step):
             trajectory = self.worker.sample_trajectory(-1, False)
             obs, acs, _, rews, _, _, _, _ = trajectory
             loss = self.estimate_policy_loss(obs, acs, rews)
             TorchUtils.update_network(self.policy_network_optimizer, loss)
 
-            print(sum(rews), loss)
+            # print(sum(rews), loss)
             self.logger.log("episodic reward", sum(rews), training_step)
             self.logger.log("policy loss", loss, training_step)
 

@@ -44,14 +44,12 @@ class RLUtils:
         dones: List[bool],
         gamma: list,
         n_step: int = 1,
-    ) -> List[float]:
+    ) -> torch.Tensor:
         """
         Get n-step TD return.
         R = 0 if done(s,a) else v(s')
         R = r(s,a) + gamma*R
         """
-        next_values = next_values
-
         returns = np.zeros_like(rews, dtype=np.float)
 
         returns[-1] = next_values[-1]
@@ -60,7 +58,7 @@ class RLUtils:
             if i in divided_indexes:
                 returns[i] = rews[i] if dones[i] else next_values[i]
             returns[i - 1] = rews[i - 1] + gamma * returns[i]
-        return returns
+        return torch.from_numpy(returns).float()
 
     @classmethod
     def get_advantage(cls, values: np.ndarray, rets: np.ndarray) -> np.ndarray:

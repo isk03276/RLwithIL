@@ -21,3 +21,7 @@ class BaseRLAlgorithm(BaseAlgorithm):
     @abstractmethod
     def estimate_value_loss(self, *args):
         pass
+
+    @abstractmethod
+    def train(self, max_training_step: int, timesteps_per_learning: int):
+        pass

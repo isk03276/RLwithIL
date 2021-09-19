@@ -12,7 +12,7 @@ class OnPolicyBuffer(AbstractBuffer):
         data = (ob, ac, ac_logprob, rew, nob, done, value, next_value)
         self._buffer.append(data)
 
-    def sample(self, num_sample=-1, init_buffer=True):
+    def sample(self, num_sample: int = -1, init_buffer: bool = True) -> np.ndarray:
         if num_sample == -1:
             result = np.array(self._buffer)
         else:
@@ -23,14 +23,14 @@ class OnPolicyBuffer(AbstractBuffer):
             self._init_buffer()
 
         return (
-            result[:, self.OB_IDX].tolist(),
-            result[:, self.AC_IDX].tolist(),
-            result[:, self.AC_LOGPROB_IDX].tolist(),
-            result[:, self.REW_IDX].tolist(),
-            result[:, self.NOB_IDX].tolist(),
-            result[:, self.DONE_IDX].tolist(),
-            result[:, self.VALUE_IDX].tolist(),
-            result[:, self.NEXT_VALUE_IDX].tolist(),
+            np.array(result[:, self.OB_IDX].tolist()),
+            np.array(result[:, self.AC_IDX].tolist()),
+            np.array(result[:, self.AC_LOGPROB_IDX].tolist()),
+            np.array(result[:, self.REW_IDX].tolist()),
+            np.array(result[:, self.NOB_IDX].tolist()),
+            np.array(result[:, self.DONE_IDX].tolist()),
+            np.array(result[:, self.VALUE_IDX].tolist()),
+            np.array(result[:, self.NEXT_VALUE_IDX].tolist()),
         )
 
     def __len__(self):

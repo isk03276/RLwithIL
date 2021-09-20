@@ -16,8 +16,7 @@ class OnPolicyBuffer(AbstractBuffer):
         if num_sample == -1:
             result = np.array(self._buffer)
         else:
-            # result = np.array(random.sample(self._buffer, num_sample))
-            result = np.array(self._buffer)
+            result = np.array(random.sample(self._buffer, num_sample))
 
         if init_buffer:
             self._init_buffer()
